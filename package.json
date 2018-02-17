@@ -1,0 +1,30 @@
+{
+  "name": "crimemap",
+  "version": "1.0.0",
+  "description": "This is an app that user can use to research a neighborhood in relation to the crime that occurs in the area. It makes use of crowd-sourced content and users can use it when traveling to a place, planning to rent or purchase house from a neighborhood, etc",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "crime",
+    "map"
+  ],
+  "author": "Everistus Olumese",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.1",
+    "mongodb": "^3.0.2",
+    "mongoose": "^5.0.5",
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.14.12"
+  }
+}

@@ -57,7 +57,7 @@ exports.findOne = (req, res)=>{
         } else{
             
 const id = req.params.crimeId;
-console.dir(req.param.crimeId);
+
 crimes.findById(id)
 .exec()
 .then(result =>{
@@ -114,8 +114,7 @@ exports.delete = (req, res)=>{
 crimes.findOneAndRemove({_id: req.params.crimeId})
 .exec()
 .then(result=>{
-    console.log(result);
-        res.status(200).json({
+          res.status(200).json({
             message: 'Crime deleted',
             results: result
         });

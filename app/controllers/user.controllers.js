@@ -3,45 +3,45 @@ const user = require("../models/user.model");
 const forgetModel = require("../models/forget.model");
 const jwt    = require('jsonwebtoken');
 const express = require("express");
-const app = express();
 const nodemailer = require("nodemailer");
 const xoauth2 = require('xoauth2');
 const smtpTransports = require('nodemailer-smtp-transport');
-
-
 const jwtConfig = require("../../config/jwt.config");
 
 exports.register = (req, res)=>{
-    
+    console.dir(req.body);
     user.count({email: req.body.email}, (err, result)=>{
-        console.dir(result);
+     
         if(result){
-            res.status(500).json({
-                error: 'email already exist',
+            res.json({
+                error: true,
+                message: 'email already exist',
          });
         } else{
 
             user.count({username: req.body.username}, (err, result)=>{
                 
         if(result){
-            res.status(500).json({
-                error: 'username already exist',
+            res.json({
+                error: true,
+                message :'username already exist',
          })
         }
          else{
-            user.create(req.body,  (err, small) => {
-                if (err) {
-                    console.dir(err);
-                    res.status(500).json({
-                        error: err,
-                 });
-                }else{
+            user.create(req.body)
+            
+            .then(small=> {
+                
                     res.status(200).json({
+                        success: true,
                         message: 'You have successfully  registered',
                         id: small._id
                     });
-                }
-            });
+                
+            })            
+            .catch(err=> {
+                console.error('Oh No', err)
+              });
         
     }
 
@@ -91,6 +91,7 @@ user.findOne({
                             }
                       res.json({
                         success: true,
+                        message: 'You have logged in successfully',
                         token: token
                       });
                       });
@@ -281,3 +282,25 @@ exports.changePassword = (req, res)=>{
         }
     });
 };
+
+exports.uploadAvatar = (req, res)=>{
+   // console.dir(req.file);
+    file = req.file.path;
+    res.json({
+        file
+    }
+    )
+};
+
+exports.getImage = (req, res) =>{
+    console.dir(req.params.userId);
+user.findById(req.params.userId)
+.exec()
+.then(result =>{
+    res.sendFile(path.join(__dirname, "..", "..",result.avatar));
+})
+
+.catch(err =>{
+    console.log(err);
+});
+}

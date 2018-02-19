@@ -1,15 +1,25 @@
 const express = require('express');
-const bodyParser = require("body-parser");
 const app = express();
+const cors = require('cors');
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}));
 
 
+
+
+app.use(cors({
+    origin:['http://localhost:8080'],
+    methods:['GET','POST', 'DELETE', 'PUT'],
+    credentials: true // enable set cookie
+}));
 const crimeroutes = require('./app/routes/crime.routes');
 const userroutes = require('./app/routes/user.routes');
 
 const morgan = require('morgan');
 
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(bodyParser.json());
+
 
 const dbConfig = require("./config/database.config.js");
 const jwtConfig = require("./config/jwt.config");
@@ -35,6 +45,7 @@ app.use(morgan('dev'));
 
 app.use('/api/', crimeroutes);
 app.use('/api/user/', userroutes);
+
 app.listen(3000, ()=>{
     console.log("Server is listening on port 3000");
 });

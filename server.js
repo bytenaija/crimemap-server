@@ -1,33 +1,34 @@
 const express = require('express');
 const app = express();
+const server = require("http").Server(app);
+const io = require("socket.io")(server);
+
+require('./app/realtime')(io)
+
 const cors = require('cors');
-const bodyParser = require("body-parser");
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+
+const PORT =  process.env.PORT || 5009
 
 
-
-
-app.use(cors({
-    origin:['http://localhost:8080'],
-    methods:['GET','POST', 'DELETE', 'PUT'],
-    credentials: true // enable set cookie
-}));
-const crimeroutes = require('./app/routes/crime.routes');
-const userroutes = require('./app/routes/user.routes');
+app.use(cors());
+const crimeroutes = require('./app/routes/crime');
+const userroutes = require('./app/routes/user');
 
 const morgan = require('morgan');
 
 
 
-const dbConfig = require("./config/database.config.js");
+const dbConfig = require("./config/database.config");
 const jwtConfig = require("./config/jwt.config");
 const mongoose = require('mongoose');
 
-mongoose.Promise = global.Promise;
-
-mongoose.connect(dbConfig.url);
+mongoose.connect(dbConfig.url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 mongoose.connection.on('error', function() {
     console.log('Could not connect to the database. Exiting now...');
@@ -40,12 +41,13 @@ mongoose.connection.once('open', function() {
 
 app.use(morgan('dev'));
 
-
+app.use((req, res, next) => {
+    req.user
+})
 
 
 app.use('/api/', crimeroutes);
 app.use('/api/user/', userroutes);
 
-app.listen(3000, ()=>{
-    console.log("Server is listening on port 3000");
-});
+
+server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));

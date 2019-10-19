@@ -1,5 +1,5 @@
 const express = require('express');
-const crimes = require("../controllers/crime.controllers");
+const crimes = require("../controllers/crimes");
 const path = require('path');
 const router = express.Router();
 const multer = require('multer')
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-const users = require("../controllers/user.controllers.js");
+const users = require("../controllers/users.js/index.js");
 
 
 

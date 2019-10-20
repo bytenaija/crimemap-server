@@ -23,7 +23,7 @@ module.exports = {
       if (err) {
         res.status(403).json(err);
       } else {
-        req.body.userId = authData.payload.userId;
+        req.body.userId = authData.user.userId;
         console.log(req.body)
         Crime.create(req.body, function (err, crime) {
           if (err) {

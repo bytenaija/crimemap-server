@@ -3,11 +3,8 @@ const Crimes = require("../models/crime");
 
 module.exports = io => {
   io.on("connection", socket => {
-    console.log("connected");
-
-    socket.emit("connected", { userId: socket.id });
-
     socket.on("update-location", async data => {
+      console.log("datatatata", data);
       const userLocation = await UserLocation.findOne({ userId: data.userId });
       if (!userLocation) {
         await UserLocation.create({
@@ -23,13 +20,13 @@ module.exports = io => {
 
       try {
         const date = new Date();
-        date.setMinutes(date.getMinutes() - 600);
+        date.setMinutes(date.getMinutes() - 30);
         console.log(date)
         let crimes = await Crimes.find({
-          createdAt:{$gte: date},
+          date:{$gte: date},
           location: {
             $near: {
-              $maxDistance: 100000,
+              $maxDistance: 10000,
               $geometry: {
                 type: "Point",
                 coordinates: [data.longitude, data.latitude]
@@ -37,15 +34,11 @@ module.exports = io => {
             }
           }
         });
-
-        socket.emit("alarm", { crimes });
-      } catch (err) {}
-      //   .find((error, results) => {
-      //   if (error) console.log(error);
-
-      //   console.log(JSON.stringify(results, 0, 2));
-      //   socket.emit('')
-      // });
+        if(crimes.length > 0) socket.emit("alarm", { crimes });
+      } catch (err) {
+        console.log(err)
+      }
+ 
     });
 
     socket.on("disconnect", data => {});

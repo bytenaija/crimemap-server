@@ -32,7 +32,7 @@ module.exports = io => {
               $maxDistance: 100000,
               $geometry: {
                 type: "Point",
-                coordinates: [data.latitude, data.longitude]
+                coordinates: [data.longitude, data.latitude]
               }
             }
           }

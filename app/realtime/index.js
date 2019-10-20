@@ -9,7 +9,6 @@ module.exports = io => {
 
     socket.on("update-location", async data => {
       const userLocation = await UserLocation.findOne({ userId: data.userId });
-      console.log(data);
       if (!userLocation) {
         await UserLocation.create({
           userId: data.userId,
@@ -23,7 +22,11 @@ module.exports = io => {
       }
 
       try {
+        const date = new Date();
+        date.setMinutes(date.getMinutes() - 600);
+        console.log(date)
         let crimes = await Crimes.find({
+          createdAt:{$gte: date},
           location: {
             $near: {
               $maxDistance: 100000,

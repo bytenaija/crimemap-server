@@ -29,14 +29,14 @@ exports.register = (req, res) => {
 
             .then(userInfo => {
               const payload = {
-                userId: userInfo._id,
+                id: userInfo._id,
                 username: userInfo.username,
                 firstname: userInfo.firstname,
                 lastname: userInfo.lastname,
                 email: userInfo.email
               };
               jwt.sign(
-                { payload },
+                { user: payload },
                 jwtConfig.secret,
                 { expiresIn: "3h" },
                 (err, token) => {
@@ -47,8 +47,8 @@ exports.register = (req, res) => {
                       error: err
                     });
                   }
-                  const newUser = { ...userInfo.toJSON(), token };
-                  delete newUser.password;
+                  const newUser = { ...payload, token };
+           
                   res.status(200).json({
                     success: true,
                     message: "You have successfully  registered",
@@ -95,7 +95,7 @@ exports.login = (req, res) => {
 
             if (success) {
               const payload = {
-                userId: user._id,
+                id: user._id,
                 username: user.username,
                 firstname: user.firstname,
                 lastname: user.lastname,

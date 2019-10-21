@@ -10,6 +10,7 @@ router.post("/crimes", users.verifyToken, crimes.addCrime);
 
 //return a crime based on ID
 router.get("/crimes/:crimeId", users.verifyToken, crimes.findOne);
+router.get("/crimes/:crimeId/views", users.verifyToken, crimes.getViews);
 
 //update a crime
 router.put("/crimes/:crimeId", users.verifyToken, crimes.editCrime);

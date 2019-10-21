@@ -10,7 +10,7 @@ module.exports = {
   findAll : async (req, res) => {
     console.log("getting crimesss");
     try {
-      const crimes = await Crime.find({}).populate({ path: 'userId', select: '_id username'})
+      const crimes = await Crime.find({}).populate({ path: 'userId', select: '_id username'}).populate('viewCount')
       res.json({ crimes })
     } catch (err) {
       console.log(err)
@@ -59,10 +59,15 @@ module.exports = {
         }
         data.incidentId = id;
 
-        await Views.create(data);
+        let {_id} = await Views.create(data);
         Crime
-          .findById(id).populate({ path: 'userId', select: "_id username" })
-          .then(crime => {
+          .findById(id).populate({ path: 'userId', select: "_id username" }).populate('viewCount')
+          .then(async (crime) => {
+            if(typeof crime.views !== Array){
+              crime.views = []
+            }
+            crime.views.push(_id);
+            await crime.save();
             res.status(200).json({ crime });
           });
       }
@@ -109,6 +114,24 @@ module.exports = {
               message: "Crime deleted",
               results: result
             });
+          });
+      }
+    });
+  },
+
+
+  //finding and returning one crime
+  getViews : (req, res) => {
+    jwt.verify(req.token, jwtConfig.secret, async (err, authData) => {
+      if (err) {
+        res.status(403).json(err);
+      } else {
+        const id = req.params.crimeId;
+        
+        Views
+          find({incidentId: id})
+          .then(views => {
+            res.status(200).json({ views });
           });
       }
     });

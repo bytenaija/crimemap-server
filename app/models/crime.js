@@ -13,11 +13,23 @@ const CrimeSchema = mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'User'
     },
+    views: [{_id: {
+        type: mongoose.SchemaTypes.ObjectId, 
+        ref: 'Views'
+    }}]
 
 }, {
-    timestamps: true
+    timestamps: true,
+     toJSON: { virtuals: true },
+      toObject: { virtuals: true }
     });
 
 CrimeSchema.index({ location: "2dsphere" });
+
+CrimeSchema.virtual('viewCount', {
+  ref: 'Views',
+  localField: 'views._id',
+  foreignField: '_id'
+})
 
 module.exports = mongoose.model('Crime', CrimeSchema);

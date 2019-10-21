@@ -113,7 +113,6 @@ exports.login = (req, res) => {
                       error: err
                     });
                   }
-
                   const authenticatedUser = { ...payload, token };
                   console.log("Auth user", authenticatedUser)
 

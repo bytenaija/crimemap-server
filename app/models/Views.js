@@ -8,8 +8,7 @@ const viewsSchema = mongoose.Schema(
     },
     userDetails: {
       browser: String,
-      country: String,
-      city: String,
+      geo: {},
       ip: String
     }
   },
@@ -17,3 +16,5 @@ const viewsSchema = mongoose.Schema(
     timestamps: true
   }
 );
+
+module.exports = mongoose.model("Views", viewsSchema)

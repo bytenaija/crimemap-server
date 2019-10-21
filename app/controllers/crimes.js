@@ -3,6 +3,7 @@ const Crime = require('../models/crime');
 const jwt = require("jsonwebtoken");
 const jwtConfig = require("../../config/jwt.config");
 const geoip = require("geoip-lite");
+const Views = require('../models/Views')
 
 module.exports = {
 
@@ -41,7 +42,7 @@ module.exports = {
 
   //finding and returning one crime
   findOne : (req, res) => {
-    jwt.verify(req.token, jwtConfig.secret, (err, authData) => {
+    jwt.verify(req.token, jwtConfig.secret, async (err, authData) => {
       if (err) {
         res.status(403).json(err);
       } else {
@@ -49,12 +50,20 @@ module.exports = {
         const clientIp = requestIp.getClientIp(req); 
         console.log("Client IP", clientIp)
         const geo = geoip.lookup(clientIp);
+        console.log("goe", geo)
         const browser = require("ua-parser").parse(req.headers["user-agent"]);
-        console.log(browser)
+        const data = {};
+        data.browser = browser.ua.toString()
+        if(geo){
+          data.goe = geo;
+        }
+        data.incidentId = id;
+
+        await Views.create(data);
         Crime
           .findById(id).populate({ path: 'userId', select: "_id username" })
-          .then(crimes => {
-            res.status(200).json({ crimes });
+          .then(crime => {
+            res.status(200).json({ crime });
           });
       }
     });

@@ -114,7 +114,7 @@ exports.login = (req, res) => {
                     });
                   }
 
-                  const authenticatedUser = { ...payload, token };
+                  const authenticatedUser = { ...user, token };
 
                   res.json({
                     success: true,

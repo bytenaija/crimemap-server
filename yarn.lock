@@ -3033,6 +3033,13 @@ typescript@^2.7.2:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.2.tgz#1cbf61d05d6b96269244eb6a3bce4bd914e0f00c"
   integrity sha512-Gr4p6nFNaoufRIY4NMdpQRNmgxVIGMs4Fcu/ujdYk3nAZqk7supzBE9idmvfZIlH/Cuj//dvi+019qEue9lV0w==
 
+ua-parser@^0.3.5:
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/ua-parser/-/ua-parser-0.3.5.tgz#2ff4f9c9e6e2d64d711461f17beb2c9c697f2f1a"
+  integrity sha1-L/T5yebi1k1xFGHxe+ssnGl/Lxo=
+  dependencies:
+    yamlparser ">=0.0.2"
+
 undefsafe@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/undefsafe/-/undefsafe-2.0.2.tgz#225f6b9e0337663e0d8e7cfd686fc2836ccace76"
@@ -3221,6 +3228,11 @@ yallist@^3.0.0, yallist@^3.0.2, yallist@^3.0.3:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.1.1.tgz#dbb7daf9bfd8bac9ab45ebf602b8cbad0d5d08fd"
   integrity sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==
+
+yamlparser@>=0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/yamlparser/-/yamlparser-0.0.2.tgz#32393e6afc70c8ca066b6650ac6738b481678ebc"
+  integrity sha1-Mjk+avxwyMoGa2ZQrGc4tIFnjrw=
 
 yauzl@^2.9.2:
   version "2.10.0"

@@ -49,9 +49,10 @@ module.exports = {
         const clientIp = requestIp.getClientIp(req); 
         console.log("Client IP", clientIp)
         const geo = geoip.lookup(clientIp);
-        console.log(geo)
+        const browser = require("ua-parser").parse(req.headers["user-agent"]);
+        console.log(browser)
         Crime
-          .findById(id).populate('userId')
+          .findById(id).populate({ path: 'userId', select: "_id username" })
           .then(crimes => {
             res.status(200).json({ crimes });
           });

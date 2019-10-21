@@ -115,6 +115,7 @@ exports.login = (req, res) => {
                   }
 
                   const authenticatedUser = { ...payload, token };
+                  console.log("Auth user", authenticatedUser)
 
                   res.json({
                     success: true,

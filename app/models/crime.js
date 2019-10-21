@@ -32,4 +32,6 @@ CrimeSchema.virtual('viewCount', {
   foreignField: '_id'
 })
 
+
+
 module.exports = mongoose.model('Crime', CrimeSchema);

@@ -25,6 +25,7 @@ module.exports = {
         res.status(403).json(err);
       } else {
         req.body.userId = authData.user.id;
+        req.body.views = [];
         console.log(req.body)
         Crime.create(req.body, function (err, crime) {
           if (err) {
@@ -63,7 +64,7 @@ module.exports = {
         Crime
           .findById(id).populate({ path: 'userId', select: "_id username" }).populate('viewCount')
           .then(async (crime) => {
-            if(typeof crime.views !== Array){
+            if(!Array.isArray(crime.views)){
               crime.views = []
             }
             crime.views.push(_id);

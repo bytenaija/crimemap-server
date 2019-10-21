@@ -48,6 +48,8 @@ module.exports = {
         const id = req.params.crimeId;
         const clientIp = requestIp.getClientIp(req); 
         console.log("Client IP", clientIp)
+        const geo = geoip.lookup(clientIp);
+        console.log(geo)
         Crime
           .findById(id).populate('userId')
           .then(crimes => {

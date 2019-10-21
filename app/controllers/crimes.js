@@ -1,15 +1,15 @@
-var path = require("path");
-
+const requestIp = require("request-ip");
 const Crime = require('../models/crime');
 const jwt = require("jsonwebtoken");
 const jwtConfig = require("../../config/jwt.config");
+const geoip = require("geoip-lite");
 
 module.exports = {
 
   findAll : async (req, res) => {
     console.log("getting crimesss");
     try {
-      const crimes = await Crime.find({}).populate('userId')
+      const crimes = await Crime.find({}).populate({ path: 'userId', select: '_id username'})
       res.json({ crimes })
     } catch (err) {
       console.log(err)
@@ -46,12 +46,12 @@ module.exports = {
         res.status(403).json(err);
       } else {
         const id = req.params.crimeId;
-
+        const clientIp = requestIp.getClientIp(req); 
+        console.log("Client IP", clientIp)
         Crime
-          .findById(id)
-          .exec()
-          .then(result => {
-            res.status(200).json({ result, authData });
+          .findById(id).populate('userId')
+          .then(crimes => {
+            res.status(200).json({ crimes });
           });
       }
     });

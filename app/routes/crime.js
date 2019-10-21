@@ -9,13 +9,13 @@ router.get("/crimes", crimes.findAll);
 router.post("/crimes", users.verifyToken, crimes.addCrime);
 
 //return a crime based on ID
-router.get("/crime/:crimeId", users.verifyToken, crimes.findOne);
+router.get("/crimes/:crimeId", users.verifyToken, crimes.findOne);
 
 //update a crime
-router.put("/crime/:crimeId", users.verifyToken, crimes.editCrime);
+router.put("/crimes/:crimeId", users.verifyToken, crimes.editCrime);
 
 //delete a crime
-router.delete("/crime/:crimeId", users.verifyToken, crimes.delete);
+router.delete("/crimes/:crimeId", users.verifyToken, crimes.delete);
 
 
 module.exports = router;

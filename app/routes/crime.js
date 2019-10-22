@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const crimes = require("../controllers/crimes");
 const users = require("../controllers/users");
+const votes = require('../controllers/votes')
+const comments = require('../controllers/comments');
 
 //get all crimes
 router.get("/crimes", crimes.findAll);
@@ -17,6 +19,10 @@ router.put("/crimes/:crimeId", users.verifyToken, crimes.editCrime);
 
 //delete a crime
 router.delete("/crimes/:crimeId", users.verifyToken, crimes.delete);
+
+
+router.get("/crimes/:incidentId/:vote", users.verifyToken, votes.vote);
+router.post("/crimes/:incidentId/comment", users.verifyToken, comments.addComment);
 
 
 module.exports = router;

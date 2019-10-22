@@ -1,33 +1,43 @@
 const requestIp = require("request-ip");
-const Crime = require('../models/crime');
+const Crime = require("../models/crime");
 const jwt = require("jsonwebtoken");
 const jwtConfig = require("../../config/jwt.config");
 const geoip = require("geoip-lite");
-const Views = require('../models/Views')
+const Views = require("../models/view");
 
 module.exports = {
-
-  findAll : async (req, res) => {
+  findAll: async (req, res) => {
     console.log("getting crimesss");
     try {
-      const crimes = await Crime.find({}).populate({ path: 'userId', select: '_id username'}).populate('viewCount')
-      res.json({ crimes })
+      const crimes = await Crime.find({})
+        .populate({ path: "userId", select: "_id username" })
+        .populate("viewCount")
+        .populate({
+          path: "comments",
+          populate: {
+            path: "userId",
+            model: "User",
+            select: "username _id"
+          }
+        })
+        .populate("votes");
+      res.json({ crimes });
     } catch (err) {
-      console.log(err)
-      res.status(500).json({err})
+      console.log(err);
+      res.status(500).json({ err });
     }
   },
 
   //adding crime to the database
-  addCrime : (req, res) => {
+  addCrime: (req, res) => {
     jwt.verify(req.token, jwtConfig.secret, (err, authData) => {
       if (err) {
         res.status(403).json(err);
       } else {
         req.body.userId = authData.user.id;
         req.body.views = [];
-        console.log(req.body)
-        Crime.create(req.body, function (err, crime) {
+        console.log(req.body);
+        Crime.create(req.body, function(err, crime) {
           if (err) {
             console.dir(err);
           } else {
@@ -42,30 +52,40 @@ module.exports = {
   },
 
   //finding and returning one crime
-  findOne : (req, res) => {
+  findOne: (req, res) => {
     jwt.verify(req.token, jwtConfig.secret, async (err, authData) => {
       if (err) {
         res.status(403).json(err);
       } else {
         const id = req.params.crimeId;
-        const clientIp = requestIp.getClientIp(req); 
-        console.log("Client IP", clientIp)
+        const clientIp = requestIp.getClientIp(req);
+        console.log("Client IP", clientIp);
         const geo = geoip.lookup(clientIp);
-        console.log("goe", geo)
+        console.log("goe", geo);
         const browser = require("ua-parser").parse(req.headers["user-agent"]);
         const data = {};
-        data.browser = browser.ua.toString()
-        if(geo){
+        data.browser = browser.ua.toString();
+        if (geo) {
           data.goe = geo;
         }
         data.incidentId = id;
 
-        let {_id} = await Views.create(data);
-        Crime
-          .findById(id).populate({ path: 'userId', select: "_id username" }).populate('viewCount')
-          .then(async (crime) => {
-            if(!Array.isArray(crime.views)){
-              crime.views = []
+        let { _id } = await Views.create(data);
+        Crime.findById(id)
+          .populate({ path: "userId", select: "_id username" })
+          .populate("viewCount")
+          .populate({
+            path: "comments",
+            populate: {
+              path: "userId",
+              model: "User",
+              select: "username _id"
+            }
+          })
+          .populate("votes")
+          .then(async crime => {
+            if (!Array.isArray(crime.views)) {
+              crime.views = [];
             }
             crime.views.push(_id);
             await crime.save();
@@ -76,7 +96,7 @@ module.exports = {
   },
 
   //editing crime
-  editCrime : (req, res, next) => {
+  editCrime: (req, res, next) => {
     jwt.verify(req.token, jwtConfig.secret, (err, authData) => {
       if (err) {
         res.status(403).json(err);
@@ -103,7 +123,7 @@ module.exports = {
   },
 
   //deleting crime
-  delete : (req, res) => {
+  delete: (req, res) => {
     jwt.verify(req.token, jwtConfig.secret, (err, authData) => {
       if (err) {
         res.status(403).json(err);
@@ -120,21 +140,19 @@ module.exports = {
     });
   },
 
-
   //finding and returning one crime
-  getViews : (req, res) => {
+  getViews: (req, res) => {
     jwt.verify(req.token, jwtConfig.secret, async (err, authData) => {
       if (err) {
         res.status(403).json(err);
       } else {
         const id = req.params.crimeId;
-        
-        Views
-          find({incidentId: id})
-          .then(views => {
-            res.status(200).json({ views });
-          });
+
+        Views;
+        find({ incidentId: id }).then(views => {
+          res.status(200).json({ views });
+        });
       }
     });
-  },
-}
+  }
+};

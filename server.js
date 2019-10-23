@@ -39,6 +39,7 @@ app.use(function(req, res, next) {
 });
 const crimeroutes = require("./app/routes/crime");
 const userroutes = require("./app/routes/user");
+const rewardroutes = require("./app/routes/reward");
 
 const morgan = require("morgan");
 
@@ -64,5 +65,6 @@ app.use(morgan("dev"));
 
 app.use("/api/", crimeroutes);
 app.use("/api/user/", userroutes);
+app.use("/api/rewards/", rewardroutes);
 
 server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
